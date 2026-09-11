@@ -11,6 +11,8 @@ Astro handles everything in the UI: pages, layouts, components, routing, and con
 
 ### Component Structure
 
+Every reusable component must declare and document its `Props` interface. The comment should explain the component's public contract, including what each required or optional prop controls. Document intent and API behavior, not the markup that follows.
+
 ```astro
 ---
 // Frontmatter: runs at build time (static output)
@@ -19,7 +21,9 @@ import GameCard from '../components/GameCard.astro';
 import { getDatabase } from '../lib/db';
 import { getAllGames } from '../lib/games';
 
+/** Props accepted by the game listing page. */
 interface Props {
+  /** Page heading shown above the game list. */
   title: string;
 }
 
@@ -109,7 +113,8 @@ There is no Svelte/React layer. When a page genuinely needs client behaviour, ad
 ## TypeScript
 
 - Use TypeScript for type-safe props
-- Define `Props` interface in frontmatter
+- Define and document a `Props` interface in frontmatter for every reusable component
+- Use TSDoc/JSDoc for exported functions in frontmatter helpers, describing purpose, parameters, and return values
 - Type component imports and helper return values
 - Run `npx astro sync` to (re)generate route/content types before linting or type-checking
 - `.astro` files are type-checked by `npm run typecheck:astro` (which runs `astro sync` then `astro check`), on the classic `typescript` package. The pure TypeScript in `db/`, `src/lib/`, and `src/types/` is type-checked separately by `npm run typecheck` (the native TS 7 compiler, `tsgo`), which does **not** process `.astro` files.
@@ -120,3 +125,5 @@ There is no Svelte/React layer. When a page genuinely needs client behaviour, ad
 - Minimize client-side JavaScript — the default is zero JS shipped
 - Import and use global CSS styles from layouts
 - Always include a `data-testid` on interactive elements (see `ui.instructions.md`)
+- Comment why a component or client script is needed; do not comment markup line by line
+- Keep component API documentation current whenever `Props` changes
